@@ -23,7 +23,7 @@ const SYSCALL_TRACE: usize = 410;
 
 use spin::Mutex;
 
-const MAX_SYSCALLS: usize = 410;
+const MAX_SYSCALLS: usize = 1000;
 static SYSCALL_COUNTS: Mutex<[usize; MAX_SYSCALLS]> = Mutex::new([0; MAX_SYSCALLS]);
 
 mod fs;
