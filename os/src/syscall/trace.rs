@@ -16,3 +16,10 @@ pub fn get_count(syscall_num: usize) -> usize {
         0
     }
 }
+
+pub fn clear_counts() {
+    let mut counts = SYSCALL_COUNTS.lock();
+    for i in 0..MAX_SYSCALLS {
+        counts[i] = 0;
+    }
+}

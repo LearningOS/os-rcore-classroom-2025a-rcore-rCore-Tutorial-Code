@@ -23,6 +23,8 @@ pub use task::{TaskControlBlock, TaskStatus};
 
 pub use context::TaskContext;
 
+pub use crate::syscall;
+
 /// The task manager, where all the tasks are managed.
 ///
 /// Functions implemented on `TaskManager` deals with all task state transitions
@@ -146,6 +148,7 @@ pub fn run_first_task() {
 /// or there is no `Ready` task and we can exit with all applications completed
 fn run_next_task() {
     TASK_MANAGER.run_next_task();
+    syscall::clear_counts();
 }
 
 /// Change the status of current `Running` task into `Ready`.
