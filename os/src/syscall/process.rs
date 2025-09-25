@@ -3,7 +3,6 @@ use crate::{
     task::{exit_current_and_run_next, suspend_current_and_run_next},
     timer::get_time_us,
 };
-use super::trace::get_count;
 
 #[repr(C)]
 #[derive(Debug)]
@@ -30,6 +29,7 @@ pub fn sys_yield() -> isize {
 pub fn sys_get_time(ts: *mut TimeVal, _tz: usize) -> isize {
     trace!("kernel: sys_get_time");
     let us = get_time_us();
+    trace!("kernel: sys_get_time, us = {}", us);
     unsafe {
         *ts = TimeVal {
             sec: us / 1_000_000,
@@ -53,7 +53,7 @@ pub fn sys_trace(_trace_request: usize, _id: usize, _data: usize) -> isize {
             0
         },
         2 => {
-            get_count(_id) as isize
+            0
         },
         _ => {
             -1
