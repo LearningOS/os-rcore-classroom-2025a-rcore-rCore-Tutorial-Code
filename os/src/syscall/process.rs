@@ -1,6 +1,6 @@
 //! Process management syscalls
 use crate::{
-    task::{exit_current_and_run_next, suspend_current_and_run_next},
+    task::{exit_current_and_run_next, suspend_current_and_run_next, get_syscall_count},
     timer::get_time_us,
 };
 
@@ -53,7 +53,7 @@ pub fn sys_trace(_trace_request: usize, _id: usize, _data: usize) -> isize {
             0
         },
         2 => {
-            0
+            get_syscall_count(_id) as isize
         },
         _ => {
             -1
