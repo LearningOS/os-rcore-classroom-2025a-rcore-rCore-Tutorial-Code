@@ -20,23 +20,19 @@ const SYSCALL_YIELD: usize = 124;
 const SYSCALL_GET_TIME: usize = 169;
 /// trace syscall
 const SYSCALL_TRACE: usize = 410;
-
-use spin::Mutex;
-
-const MAX_SYSCALLS: usize = 1000;
-static SYSCALL_COUNTS: Mutex<[usize; MAX_SYSCALLS]> = Mutex::new([0; MAX_SYSCALLS]);
+/// max syscall id
+pub const MAX_SYSCALLS: usize = 1000;
 
 mod fs;
 mod process;
-mod trace;
 
 use fs::*;
 use process::*;
-use trace::increment_syscall;
+use crate::task::add_syscall_count;
 
 /// handle syscall exception with `syscall_id` and other arguments
 pub fn syscall(syscall_id: usize, args: [usize; 3]) -> isize {
-    increment_syscall(syscall_id);
+    add_syscall_count(syscall_id);
     match syscall_id {
         SYSCALL_WRITE => sys_write(args[0], args[1] as *const u8, args[2]),
         SYSCALL_EXIT => sys_exit(args[0] as i32),
@@ -45,9 +41,4 @@ pub fn syscall(syscall_id: usize, args: [usize; 3]) -> isize {
         SYSCALL_TRACE => sys_trace(args[0], args[1], args[2]),
         _ => panic!("Unsupported syscall_id: {}", syscall_id),
     }
-}
-
-/// clear syscall count
-pub fn clear_counts() {
-    trace::clear_counts();
 }
